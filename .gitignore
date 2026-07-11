@@ -56,3 +56,6 @@ ansible/*.retry
 deq
 query
 stop
+
+# Render deploy sync clone (local only)
+_deploy/
