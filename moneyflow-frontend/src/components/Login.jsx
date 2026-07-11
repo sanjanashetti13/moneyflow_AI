@@ -5,8 +5,8 @@ import { TrendingUp, Mail, Lock, ArrowRight } from 'lucide-react'
 import EtheralShadow from './ui/EtheralShadow'
 
 export default function Login({ setToken }) {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
+  const [email, setEmail] = useState(import.meta.env.VITE_DEV_EMAIL || '')
+  const [password, setPassword] = useState(import.meta.env.VITE_DEV_PASSWORD || '')
   const [loading, setLoading] = useState(false)
 
   const navigate = useNavigate()

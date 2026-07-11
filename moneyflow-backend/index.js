@@ -62,9 +62,37 @@ const JWT_SECRET = process.env.JWT_SECRET;
 // ------------------------------
 // MONGO CONNECTION
 // ------------------------------
+async function seedDevAdmin() {
+  if (process.env.NODE_ENV === "production") return;
+
+  const email = process.env.DEV_ADMIN_EMAIL;
+  const password = process.env.DEV_ADMIN_PASSWORD;
+  if (!email || !password) return;
+
+  const existing = await User.findOne({ email });
+  if (existing?.password) return;
+
+  const hashed = await bcrypt.hash(password, 10);
+  if (existing) {
+    existing.password = hashed;
+    existing.username = existing.username || "Admin";
+    await existing.save();
+  } else {
+    await User.create({ email, password: hashed, username: "Admin" });
+  }
+  console.log(`Dev admin ready: ${email}`);
+}
+
 mongoose
   .connect(process.env.MONGO_URI)
-  .then(() => console.log("MongoDB Connected ✔"))
+  .then(async () => {
+    console.log("MongoDB Connected ✔");
+    try {
+      await seedDevAdmin();
+    } catch (err) {
+      console.error("Dev admin seed error:", err);
+    }
+  })
   .catch((err) => console.error("MongoDB Error:", err));
 
 // ------------------------------
