@@ -31,5 +31,5 @@ Write-Host "`n=== Optional: monorepo moneyflow_AI ===" -ForegroundColor Cyan
 Set-Location $root
 git push origin main
 
-Write-Host "`nDone. Redeploy both services on Render (Clear build cache)." -ForegroundColor Green
+Write-Host "`nDone. You push when ready — then redeploy both services on Render (Clear build cache)." -ForegroundColor Green
 Write-Host "Backend health: https://moneyflow-backend-hyh8.onrender.com/api/health" -ForegroundColor Yellow
