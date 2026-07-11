@@ -2,6 +2,12 @@
 export const PRODUCTION_API_URL = "https://moneyflow-ai-backend.onrender.com";
 const LOCAL_API_URL = "http://localhost:5000";
 
+/** Old/wrong Render services — never use these in production builds */
+const BLOCKED_API_HOSTS = new Set([
+  "moneyflow-backend-1.onrender.com",
+  "moneyflow-backend-hyh8.onrender.com",
+]);
+
 function normalizeBaseUrl(raw) {
   let url = (raw ?? "").trim();
   if (!url || url === "undefined") return null;
@@ -16,9 +22,20 @@ function normalizeBaseUrl(raw) {
   return url.replace(/\/$/, "");
 }
 
+function isUsableApiUrl(url) {
+  try {
+    const host = new URL(url).hostname;
+    return !BLOCKED_API_HOSTS.has(host);
+  } catch {
+    return false;
+  }
+}
+
 function resolveApiUrl() {
   const fromEnv = normalizeBaseUrl(import.meta.env.VITE_API_URL);
-  if (fromEnv) return fromEnv;
+  if (fromEnv && isUsableApiUrl(fromEnv)) {
+    return fromEnv;
+  }
 
   return import.meta.env.PROD ? PRODUCTION_API_URL : LOCAL_API_URL;
 }
@@ -26,5 +43,5 @@ function resolveApiUrl() {
 /** Backend base URL for all API calls and OAuth redirects */
 export const API_URL = resolveApiUrl();
 
-/** Google OAuth must hit the backend, not the frontend */
-export const GOOGLE_AUTH_URL = `${API_URL}/auth/google`;
+/** Always use live backend for OAuth — ignores bad Render VITE_API_URL overrides */
+export const GOOGLE_AUTH_URL = `${PRODUCTION_API_URL}/auth/google`;
