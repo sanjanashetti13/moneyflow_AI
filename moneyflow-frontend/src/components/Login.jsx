@@ -3,7 +3,10 @@ import axios from 'axios'
 import { useNavigate, Link } from 'react-router-dom'
 import { TrendingUp, Mail, Lock, ArrowRight } from 'lucide-react'
 import EtheralShadow from './ui/EtheralShadow'
-import { API_URL, GOOGLE_AUTH_URL } from '@/lib/api'
+import { API_URL } from '@/lib/api'
+
+/** Production backend — hardcoded so OAuth never uses a relative /undefined/auth/google URL */
+const GOOGLE_LOGIN_HREF = 'https://moneyflow-backend-hyh8.onrender.com/auth/google'
 
 export default function Login({ setToken }) {
   const [email, setEmail] = useState(import.meta.env.VITE_DEV_EMAIL || '')
@@ -26,10 +29,6 @@ export default function Login({ setToken }) {
     } finally {
       setLoading(false)
     }
-  }
-
-  const handleGoogleLogin = () => {
-    window.location.href = GOOGLE_AUTH_URL
   }
 
   return (
@@ -104,9 +103,9 @@ export default function Login({ setToken }) {
               </div>
             </div>
 
-            <button
-              onClick={handleGoogleLogin}
-              className="w-full bg-white hover:bg-zinc-100 text-zinc-950 font-bold py-3 rounded-xl transition-all active:scale-[0.98] flex items-center justify-center gap-3 text-xs"
+            <a
+              href={GOOGLE_LOGIN_HREF}
+              className="w-full bg-white hover:bg-zinc-100 text-zinc-950 font-bold py-3 rounded-xl transition-all active:scale-[0.98] flex items-center justify-center gap-3 text-xs no-underline"
             >
               <svg className="w-4 h-4" viewBox="0 0 24 24">
                 <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
@@ -116,7 +115,7 @@ export default function Login({ setToken }) {
                 <path d="M0 0h24v24H0z" fill="none"/>
               </svg>
               Sign in with Google
-            </button>
+            </a>
           </div>
 
           <p className="text-center mt-10 text-zinc-500 text-xs font-semibold uppercase tracking-wider">
