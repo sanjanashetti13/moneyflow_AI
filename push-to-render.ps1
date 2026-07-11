@@ -16,6 +16,9 @@ if (-not (Test-Path "$feDeploy\.git")) {
     Write-Host "First run: cloning frontend repo into _deploy\moneyflow-frontend ..."
     New-Item -ItemType Directory -Force -Path "$root\_deploy" | Out-Null
     git clone https://github.com/sanjanashetti13/moneyflow-frontend.git $feDeploy
+} elseif (-not (git -C $feDeploy remote get-url origin 2>$null)) {
+    Write-Host "Adding origin remote to _deploy\moneyflow-frontend ..."
+    git -C $feDeploy remote add origin https://github.com/sanjanashetti13/moneyflow-frontend.git
 }
 robocopy "$root\moneyflow-frontend" $feDeploy /E /XD node_modules dist .git .vite /XF .env build_log.txt /NFL /NDL /NJH /NJS /nc /ns /np | Out-Null
 Set-Location $feDeploy
