@@ -5,8 +5,7 @@ import Dashboard from "./components/Dashboard";
 import Analytics from "./components/Analytics";
 import Profile from "./components/Profile";
 import History from "./components/History";
-import Sidebar from "./components/Sidebar"; // Added
-import AIInsightsPage from "./components/AI/AIInsightsPage"; // Added
+import AIInsightsPage from "./components/AI/AIInsightsPage";
 import MonthSummary from "./components/MonthSummary";
 
 import ProtectedLayout from "./components/ProtectedLayout";
@@ -17,17 +16,14 @@ import SetupUsername from "./components/SetupUsername";
 import ErrorBoundary from "./components/ErrorBoundary";
 
 export default function App() {
-  // App-wide token state
   const [token, setToken] = useState(localStorage.getItem("token") || "");
 
-  // 1) Listen to localStorage changes (other tabs)
   useEffect(() => {
     const onStorage = () => setToken(localStorage.getItem("token") || "");
     window.addEventListener("storage", onStorage);
     return () => window.removeEventListener("storage", onStorage);
   }, []);
 
-  // 2) Listen to our custom same-tab event (GoogleCallback, SetupUsername, Profile)
   useEffect(() => {
     const onTokenChanged = (ev) => {
       const newToken = ev?.detail || localStorage.getItem("token") || "";
@@ -44,23 +40,16 @@ export default function App() {
     <ErrorBoundary>
       <BrowserRouter>
         <Routes>
-          {/* Public routes */}
           <Route path="/login" element={<Login setToken={setToken} />} />
           <Route path="/register" element={<Register />} />
-
-          {/* Google callback receives setToken to sync login */}
           <Route
             path="/google-callback"
             element={<GoogleCallback setToken={setToken} />}
           />
-
-          {/* Username setup: must NOT be inside ProtectedLayout */}
           <Route
             path="/setup-username"
             element={<SetupUsername setToken={setToken} />}
           />
-
-          {/* Protected routes */}
           <Route
             path="/"
             element={
@@ -79,8 +68,6 @@ export default function App() {
             <Route path="ai-insights" element={<AIInsightsPage />} />
             <Route path="month-summary" element={<MonthSummary />} />
           </Route>
-
-          {/* Fallback */}
           <Route
             path="*"
             element={<Navigate to={isAuthenticated ? "/" : "/login"} replace />}
