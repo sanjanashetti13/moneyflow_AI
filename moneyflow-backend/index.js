@@ -307,6 +307,5 @@ app.get("/api/health", (req, res) => res.json({ status: "ok", service: "moneyflo
 app.get("/", (req, res) => res.send("Backend OK ✔"));
 
 app.listen(PORT, "0.0.0.0", () => console.log(`Backend running on http://0.0.0.0:${PORT}`));
-  
- 
- 
+ 
+
