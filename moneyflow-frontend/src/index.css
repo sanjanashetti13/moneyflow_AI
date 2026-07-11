@@ -1,0 +1,28 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+}
+
+@layer base {
+  body {
+    @apply bg-zinc-950 text-zinc-100 antialiased font-sans;
+  }
+}
+
+@layer components {
+  .glass-card {
+    @apply bg-zinc-900/50 border border-zinc-800 backdrop-blur-sm rounded-2xl;
+  }
+}
+
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
+}
+
+/* Hide Spline Watermark */
+a[href*="spline.design"] {
+  display: none !important;
+}

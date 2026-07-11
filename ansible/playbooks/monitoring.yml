@@ -1,0 +1,124 @@
+- name: Deploy Monitoring Stack (Prometheus + Grafana)
+  hosts: webserver
+  become: yes
+  gather_facts: yes
+  
+  vars:
+    server_ip: "localhost"
+    monitoring_dir: /opt/monitoring
+    
+  tasks:
+    - name: Ensure Docker service is running (already installed by deploy playbook)
+      systemd:
+        name: docker
+        state: started
+        enabled: yes
+      tags: ['docker']
+
+    - name: Create monitoring directory
+      file:
+        path: "{{ monitoring_dir }}"
+        state: directory
+        mode: '0755'
+      tags: ['monitoring']
+
+    - name: Create Prometheus config directory
+      file:
+        path: "{{ monitoring_dir }}/prometheus"
+        state: directory
+        mode: '0755'
+      tags: ['monitoring']
+
+    - name: Create Grafana data directory
+      file:
+        path: "{{ monitoring_dir }}/grafana-data"
+        state: directory
+        mode: '0755'
+      tags: ['monitoring']
+
+    - name: Copy Docker Compose file for monitoring stack
+      template:
+        src: ../templates/docker-compose.yml.j2
+        dest: "{{ monitoring_dir }}/docker-compose.yml"
+        mode: '0644'
+      tags: ['monitoring']
+
+    - name: Copy Prometheus configuration
+      template:
+        src: ../templates/prometheus.yml.j2
+        dest: "{{ monitoring_dir }}/prometheus/prometheus.yml"
+        mode: '0644'
+      tags: ['monitoring']
+
+    - name: Stop existing monitoring containers (if any)
+      command: docker compose down --remove-orphans
+      args:
+        chdir: "{{ monitoring_dir }}"
+      ignore_errors: yes
+      tags: ['monitoring']
+
+    - name: Start monitoring stack (with 5-min timeout)
+      command: docker compose up -d --pull missing
+      args:
+        chdir: "{{ monitoring_dir }}"
+      async: 300
+      poll: 15
+      tags: ['monitoring']
+
+    - name: Wait for containers to start
+      pause:
+        seconds: 10
+      tags: ['monitoring']
+
+    - name: Check running containers
+      command: docker ps
+      register: docker_ps
+      changed_when: false
+      tags: ['verify']
+
+    - name: Display running containers
+      debug:
+        msg: "{{ docker_ps.stdout_lines }}"
+      tags: ['verify']
+
+    - name: Wait for Prometheus to be ready
+      wait_for:
+        port: 9090
+        delay: 5
+        timeout: 60
+      tags: ['verify']
+
+    - name: Wait for Grafana to be ready
+      wait_for:
+        port: 3001
+        delay: 5
+        timeout: 60
+      tags: ['verify']
+
+    - name: Test Prometheus endpoint
+      uri:
+        url: "http://localhost:9090/-/healthy"
+        return_content: yes
+      register: prometheus_health
+      tags: ['verify']
+
+    - name: Display Prometheus health status
+      debug:
+        msg: "Prometheus is healthy: {{ prometheus_health.content }}"
+      tags: ['verify']
+
+    - name: Allow Prometheus port through firewall (if enabled)
+      ufw:
+        rule: allow
+        port: '9090'
+        proto: tcp
+      ignore_errors: yes
+      tags: ['firewall']
+
+    - name: Allow Grafana port through firewall (if enabled)
+      ufw:
+        rule: allow
+        port: '3001'
+        proto: tcp
+      ignore_errors: yes
+      tags: ['firewall']

@@ -1,0 +1,61 @@
+- name: Install and Configure Nginx
+  hosts: webserver
+  become: yes
+  gather_facts: no
+  
+  tasks:
+    - name: Robustly sanitize APT sources (remove ALL Docker repo occurrences)
+      shell: "grep -l 'download.docker.com' /etc/apt/sources.list /etc/apt/sources.list.d/*.list | xargs -r sed -i '/download.docker.com/d'"
+      ignore_errors: yes
+      tags: ['nginx', 'setup']
+
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+        cache_valid_time: 3600
+      tags: ['nginx']
+
+    - name: Install Nginx
+      apt:
+        name: nginx
+        state: present
+      tags: ['nginx']
+
+    - name: Enable Nginx service to start on boot
+      systemd:
+        name: nginx
+        enabled: yes
+      tags: ['nginx']
+
+    - name: Start Nginx service
+      systemd:
+        name: nginx
+        state: started
+      tags: ['nginx']
+
+    - name: Verify Nginx is running
+      systemd:
+        name: nginx
+        state: started
+      register: nginx_status
+      tags: ['nginx']
+
+    - name: Display Nginx status
+      debug:
+        msg: "Nginx is {{ nginx_status.status.ActiveState }}"
+      tags: ['nginx']
+
+    - name: Check if UFW is installed
+      command: which ufw
+      register: ufw_exists
+      ignore_errors: yes
+      changed_when: false
+      tags: ['nginx']
+
+    - name: Allow Nginx through UFW firewall (if enabled)
+      ufw:
+        rule: allow
+        name: 'Nginx Full'
+      when: ufw_exists.rc == 0
+      ignore_errors: yes
+      tags: ['nginx']

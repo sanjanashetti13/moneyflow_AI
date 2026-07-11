@@ -1,0 +1,75 @@
+---
+# Master Playbook for Complete Money Flow Deployment
+# This playbook orchestrates the entire deployment process
+# Run with: ansible-playbook -i inventory complete-deployment.yml
+
+- name: "PHASE 1: Install Nginx Web Server"
+  import_playbook: playbooks/install-nginx.yml
+  tags: ['phase1', 'nginx']
+
+- name: "PHASE 2: Deploy Money Flow Application"
+  import_playbook: playbooks/deploy-money-flow.yml
+  tags: ['phase2', 'app']
+
+- name: "PHASE 3: Configure Nginx Reverse Proxy"
+  import_playbook: playbooks/configure-nginx-proxy.yml
+  tags: ['phase3', 'proxy']
+
+- name: "PHASE 4: Deploy Monitoring Stack"
+  import_playbook: playbooks/monitoring.yml
+  tags: ['phase4', 'monitoring']
+
+- name: Final Verification and Summary
+  hosts: webserver
+  become: yes
+  gather_facts: no
+  tasks:
+    - name: Check all services status
+      systemd:
+        name: "{{ item }}"
+      register: service_status
+      loop:
+        - nginx
+        - docker
+      tags: ['verify']
+
+    - name: Display services status
+      debug:
+        msg: "{{ item.item }} is {{ item.status.ActiveState }}"
+      loop: "{{ service_status.results }}"
+      tags: ['verify']
+
+    - name: Check Docker containers
+      command: >
+        docker ps --format "{% raw %}table {{.Names}}\t{{.Status}}\t{{.Ports}}{% endraw %}"
+      register: containers
+      changed_when: false
+      tags: ['verify']
+
+    - name: Display container status
+      debug:
+        msg: "{{ containers.stdout_lines }}"
+      tags: ['verify']
+
+    - name: Display deployment summary
+      debug:
+        msg:
+          - "========================================="
+          - "✅ DEPLOYMENT COMPLETED SUCCESSFULLY!"
+          - "========================================="
+          - ""
+          - "📱 Money Flow App: http://{{ hostvars[inventory_hostname].server_ip | default('<SERVER_IP>') }}"
+          - "📊 Prometheus: http://{{ hostvars[inventory_hostname].server_ip | default('<SERVER_IP>') }}:9090"
+          - "📈 Grafana: http://{{ hostvars[inventory_hostname].server_ip | default('<SERVER_IP>') }}:3001"
+          - ""
+          - "🔐 Grafana Login: admin / admin"
+          - ""
+          - "Next Steps:"
+          - "1. Open Money Flow app in browser"
+          - "2. Test user registration and login"
+          - "3. Access Prometheus dashboard"
+          - "4. Login to Grafana and add Prometheus datasource"
+          - "5. Import dashboard for system metrics"
+          - ""
+          - "========================================="
+      tags: ['verify']

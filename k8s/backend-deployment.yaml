@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: moneyflow-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: moneyflow-backend
+  template:
+    metadata:
+      labels:
+        app: moneyflow-backend
+    spec:
+      containers:
+      - name: moneyflow-backend
+        image: sanjanashetti/moneyflow-backend:latest
+        ports:
+        - containerPort: 5000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: moneyflow-backend-service
+spec:
+  selector:
+    app: moneyflow-backend
+  ports:
+    - port: 5000
+      targetPort: 5000
+  type: ClusterIP

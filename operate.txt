@@ -1,0 +1,58 @@
+# How to Run MoneyFlow AI
+
+You can run the system using Docker (easiest) or manually for development.
+
+## Method 1: Docker (Recommended)
+This runs both the frontend and backend in containers.
+
+1.  **Open a terminal** in the root directory: `c:\KLE\KLE_Projects\Money_Flow _Ansible`
+2.  **Run the following command**:
+    ```bash
+    docker-compose up -d --build
+    ```
+3.  **Access the application**:
+    *   **Frontend**: [http://localhost:5180](http://localhost:5180)
+    *   **Backend API**: [http://localhost:5005](http://localhost:5005)
+
+---
+
+## Method 2: Local Development (Manual)
+Use this if you want to make changes and see them instantly.
+
+### 1. Start the Backend
+1.  Navigate to the backend folder:
+    ```bash
+    cd moneyflow-backend
+    ```
+2.  Install dependencies:
+    ```bash
+    npm install
+    ```
+3.  Start the server:
+    ```bash
+    npm start
+    ```
+    *The backend will run on **http://localhost:5005***.
+
+### 2. Start the Frontend
+1.  Open a **new** terminal and navigate to the frontend folder:
+    ```bash
+    cd moneyflow-frontend
+    ```
+2.  Install dependencies:
+    ```bash
+    npm install
+    ```
+3.  Start the development server:
+    ```bash
+    npm run dev
+    ```
+    *The frontend will run on **http://localhost:5173***.
+
+---
+
+## Prerequisites
+Ensure your `.env` files in both folders have the following:
+- **MongoDB URI**: Connection string to your database.
+- **Groq API Key**: For AI features.
+- **Google Client ID/Secret**: For Google Login (must match the `localhost` redirect URIs in Google Console).
