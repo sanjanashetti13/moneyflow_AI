@@ -3,7 +3,7 @@ import axios from 'axios'
 import { useNavigate, Link } from 'react-router-dom'
 import { TrendingUp, Mail, Lock, ArrowRight } from 'lucide-react'
 import EtheralShadow from './ui/EtheralShadow'
-import { API_URL } from '@/lib/api'
+import { API_URL, GOOGLE_AUTH_URL } from '@/lib/api'
 
 export default function Login({ setToken }) {
   const [email, setEmail] = useState(import.meta.env.VITE_DEV_EMAIL || '')
@@ -29,7 +29,7 @@ export default function Login({ setToken }) {
   }
 
   const handleGoogleLogin = () => {
-    window.location.href = `${API_URL}/auth/google`
+    window.location.href = GOOGLE_AUTH_URL
   }
 
   return (
