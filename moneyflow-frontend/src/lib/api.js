@@ -15,5 +15,5 @@ function resolveApiUrl() {
 /** Backend base URL for all API calls and OAuth redirects */
 export const API_URL = resolveApiUrl();
 
-/** Always absolute — use for Google OAuth (must hit backend, not frontend) */
-export const GOOGLE_AUTH_URL = `${PRODUCTION_API_URL}/auth/google`;
+/** Google OAuth must hit the backend, not the frontend */
+export const GOOGLE_AUTH_URL = `${API_URL}/auth/google`;

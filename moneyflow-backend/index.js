@@ -18,8 +18,14 @@ import User from "./models/User.js";
 import Expense from "./models/Expense.js";
 import Otp from "./models/Otp.js";
 import { sendOtpEmail } from "./services/mail.js";
+import {
+  resolveGoogleCallbackUrl,
+  resolvePublicBackendUrl,
+} from "./config/env.js";
 
 const app = express();
+const PUBLIC_BACKEND_URL = resolvePublicBackendUrl();
+const GOOGLE_CALLBACK_URL = resolveGoogleCallbackUrl();
 app.use(express.json());
 
 // ------------------------------
@@ -58,6 +64,9 @@ app.use(passport.session());
 
 const PORT = process.env.PORT || 5000;
 const JWT_SECRET = process.env.JWT_SECRET;
+
+console.log(`Backend URL: ${PUBLIC_BACKEND_URL}`);
+console.log(`Google callback URL: ${GOOGLE_CALLBACK_URL}`);
 
 // ------------------------------
 // MONGO CONNECTION
@@ -103,7 +112,7 @@ passport.use(
     {
       clientID: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      callbackURL: process.env.GOOGLE_CALLBACK_URL,
+      callbackURL: GOOGLE_CALLBACK_URL,
     },
     async (accessToken, refreshToken, profile, done) => {
       try {
@@ -298,5 +307,6 @@ app.get("/api/health", (req, res) => res.json({ status: "ok", service: "moneyflo
 app.get("/", (req, res) => res.send("Backend OK ✔"));
 
 app.listen(PORT, "0.0.0.0", () => console.log(`Backend running on http://0.0.0.0:${PORT}`));
-   
+  
+ 
  

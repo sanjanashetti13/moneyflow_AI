@@ -1,6 +1,7 @@
 import { google } from 'googleapis';
 import { getChatCompletion } from './openai.js';
 import he from 'he';
+import { resolveGoogleCallbackUrl } from '../config/env.js';
 
 /**
  * Gmail Subscription Parser
@@ -9,7 +10,7 @@ export const syncSubscriptionsFromGmail = async (accessToken, refreshToken) => {
     const auth = new google.auth.OAuth2(
         process.env.GOOGLE_CLIENT_ID,
         process.env.GOOGLE_CLIENT_SECRET,
-        process.env.GOOGLE_CALLBACK_URL
+        resolveGoogleCallbackUrl()
     );
     auth.setCredentials({ access_token: accessToken, refresh_token: refreshToken });
 

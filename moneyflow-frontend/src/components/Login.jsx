@@ -3,10 +3,7 @@ import axios from 'axios'
 import { useNavigate, Link } from 'react-router-dom'
 import { TrendingUp, Mail, Lock, ArrowRight } from 'lucide-react'
 import EtheralShadow from './ui/EtheralShadow'
-import { API_URL } from '@/lib/api'
-
-/** Production backend — hardcoded so OAuth never uses a relative /undefined/auth/google URL */
-const GOOGLE_LOGIN_HREF = 'https://moneyflow-backend-hyh8.onrender.com/auth/google'
+import { API_URL, GOOGLE_AUTH_URL } from '@/lib/api'
 
 export default function Login({ setToken }) {
   const [email, setEmail] = useState(import.meta.env.VITE_DEV_EMAIL || '')
@@ -104,7 +101,7 @@ export default function Login({ setToken }) {
             </div>
 
             <a
-              href={GOOGLE_LOGIN_HREF}
+              href={GOOGLE_AUTH_URL}
               className="w-full bg-white hover:bg-zinc-100 text-zinc-950 font-bold py-3 rounded-xl transition-all active:scale-[0.98] flex items-center justify-center gap-3 text-xs no-underline"
             >
               <svg className="w-4 h-4" viewBox="0 0 24 24">
