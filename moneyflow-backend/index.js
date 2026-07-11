@@ -92,17 +92,29 @@ async function seedDevAdmin() {
   console.log(`Dev admin ready: ${email}`);
 }
 
-mongoose
-  .connect(process.env.MONGO_URI)
-  .then(async () => {
+async function startServer() {
+  const mongoUri = process.env.MONGO_URI?.trim();
+  if (!mongoUri) {
+    console.error("FATAL: MONGO_URI is not set. Add your MongoDB Atlas URI in Render Environment.");
+    process.exit(1);
+  }
+
+  try {
+    await mongoose.connect(mongoUri);
     console.log("MongoDB Connected ✔");
     try {
       await seedDevAdmin();
     } catch (err) {
       console.error("Dev admin seed error:", err);
     }
-  })
-  .catch((err) => console.error("MongoDB Error:", err));
+  } catch (err) {
+    console.error("MongoDB connection failed:", err.message);
+    console.error("Check MONGO_URI on Render and MongoDB Atlas Network Access (allow 0.0.0.0/0).");
+    process.exit(1);
+  }
+
+  app.listen(PORT, "0.0.0.0", () => console.log(`Backend running on http://0.0.0.0:${PORT}`));
+}
 
 // ------------------------------
 // GOOGLE STRATEGY
@@ -302,10 +314,17 @@ app.get("/api/currency", async (req, res) => {
 app.use("/api/ai", authenticate, aiRoutes);
 app.use("/api/summary", authenticate, summaryRoutes);
 
-app.get("/api/health", (req, res) => res.json({ status: "ok", service: "moneyflow-backend" }));
+app.get("/api/health", (req, res) => {
+  const dbReady = mongoose.connection.readyState === 1;
+  res.status(dbReady ? 200 : 503).json({
+    status: dbReady ? "ok" : "degraded",
+    service: "moneyflow-backend",
+    mongodb: dbReady ? "connected" : "disconnected",
+  });
+});
 
 app.get("/", (req, res) => res.send("Backend OK ✔"));
 
-app.listen(PORT, "0.0.0.0", () => console.log(`Backend running on http://0.0.0.0:${PORT}`));
+startServer();
  
 
