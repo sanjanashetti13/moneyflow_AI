@@ -2,12 +2,12 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { TrendingUp, User, ArrowRight } from "lucide-react";
+import { API_URL } from "@/lib/api";
 
 export default function SetupUsername({ setToken }) {
   const [username, setUsername] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const API_URL = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     const u = JSON.parse(localStorage.getItem("user") || "{}");

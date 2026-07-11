@@ -2,12 +2,12 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Calendar, TrendingDown, TrendingUp, ChevronRight, Mail, CheckCircle2, Clock } from 'lucide-react';
 import { Card } from './ui/card';
+import { API_URL } from '@/lib/api';
 
 export default function MonthSummary() {
     const [summaries, setSummaries] = useState([]);
     const [loading, setLoading] = useState(true);
     const token = localStorage.getItem("token");
-    const API_URL = import.meta.env.VITE_API_URL;
 
     useEffect(() => {
         fetchSummaries();

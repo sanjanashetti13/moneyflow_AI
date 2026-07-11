@@ -34,13 +34,13 @@ import {
   MorphingPopoverContent 
 } from "./ui/morphing-popover";
 import { Button } from "./ui/button";
+import { API_URL } from "@/lib/api";
 
 export default function Dashboard() {
   const { token } = useOutletContext();
   const [showBalance, setShowBalance] = useState(true);
 
   const user = JSON.parse(localStorage.getItem("user") || "{}");
-  const API_URL = import.meta.env.VITE_API_URL;
 
   const [expenses, setExpenses] = useState([]);
   const [rates, setRates] = useState({});

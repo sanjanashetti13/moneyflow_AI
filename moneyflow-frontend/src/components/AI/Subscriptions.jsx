@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useOutletContext } from 'react-router-dom';
 import { Repeat, ShieldCheck, AlertCircle, Loader2, CreditCard, Calendar, Zap } from 'lucide-react';
+import { API_URL } from '@/lib/api';
 
 export default function Subscriptions() {
     const { token } = useOutletContext();
@@ -11,7 +12,6 @@ export default function Subscriptions() {
     const [pending, setPending] = useState([]);
     const [selectedIndices, setSelectedIndices] = useState([]);
     const [showConfirm, setShowConfirm] = useState(false);
-    const API_URL = import.meta.env.VITE_API_URL;
 
     useEffect(() => {
         if (pending.length > 0) {

@@ -3,12 +3,12 @@ import axios from "axios";
 import { format, startOfDay, subDays } from "date-fns";
 import { useOutletContext } from "react-router-dom";
 import { Clock, Calendar, ChevronRight, Tag, ArrowRight, Activity } from "lucide-react";
+import { API_URL } from "@/lib/api";
 
 export default function History() {
   const { token } = useOutletContext();
   const [expenses, setExpenses] = useState([]);
   const [loading, setLoading] = useState(true);
-  const API_URL = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     if (!token) return;

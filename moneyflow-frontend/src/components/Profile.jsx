@@ -3,11 +3,11 @@ import axios from "axios";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import { User, Mail, Wallet, ShieldCheck, Check, LogOut, IndianRupee, DollarSign, Euro, PoundSterling } from "lucide-react";
 import { SmartCombobox } from "@/components/ui/smart-combo-box";
+import { API_URL } from "@/lib/api";
 
 export default function Profile() {
   const { token, setToken } = useOutletContext();
   const navigate = useNavigate();
-  const API_URL = import.meta.env.VITE_API_URL;
 
   const logout = () => {
     localStorage.removeItem("token");

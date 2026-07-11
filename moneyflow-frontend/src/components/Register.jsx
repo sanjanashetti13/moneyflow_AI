@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import axios from 'axios'
 import { useNavigate, Link } from 'react-router-dom'
 import { TrendingUp, User, Mail, Lock, ArrowRight, ShieldCheck, RefreshCw, Check, X } from 'lucide-react'
+import { API_URL } from '@/lib/api'
 
 export default function Register() {
   const [email, setEmail] = useState('')
@@ -34,7 +35,6 @@ export default function Register() {
   const isPasswordValid = Object.values(validations).every(Boolean)
 
   const navigate = useNavigate()
-  const API_URL = import.meta.env.VITE_API_URL
 
   const handleSendOtp = async (e) => {
     e.preventDefault()

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useOutletContext } from 'react-router-dom';
 import { FileText, Mail, ArrowRight, CheckCircle2, Loader2, Sparkles, TrendingDown, Target } from 'lucide-react';
+import { API_URL } from '@/lib/api';
 
 export default function AIReport() {
     const { token } = useOutletContext();
@@ -9,7 +10,6 @@ export default function AIReport() {
     const [loading, setLoading] = useState(false);
     const [sendingEmail, setSendingEmail] = useState(false);
     const [success, setSuccess] = useState(false);
-    const API_URL = import.meta.env.VITE_API_URL;
 
     const generateReport = async () => {
         setLoading(true);

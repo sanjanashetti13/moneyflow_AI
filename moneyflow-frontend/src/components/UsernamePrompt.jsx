@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { User, Check } from "lucide-react";
+import { API_URL } from "@/lib/api";
 
 export default function UsernamePrompt({ token, onSaved }) {
   const [visible, setVisible] = useState(false);
   const [name, setName] = useState("");
-  const API_URL = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user") || "{}");

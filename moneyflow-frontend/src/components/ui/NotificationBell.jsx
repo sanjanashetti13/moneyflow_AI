@@ -2,12 +2,12 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Bell, LucideBellDot } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { API_URL } from '@/lib/api';
 
 export default function NotificationBell() {
     const [hasNew, setHasNew] = useState(false);
     const [latestSummary, setLatestSummary] = useState(null);
     const token = localStorage.getItem("token");
-    const API_URL = import.meta.env.VITE_API_URL;
     const navigate = useNavigate();
 
     useEffect(() => {

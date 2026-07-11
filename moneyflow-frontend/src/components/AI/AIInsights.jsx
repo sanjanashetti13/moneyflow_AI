@@ -2,11 +2,11 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Sparkles, RefreshCw, Lightbulb, TrendingUp, Wallet, Zap, ShieldCheck, PieChart, Box } from 'lucide-react';
 import DynamicBorderCard from '../ui/dynamic-border-card';
+import { API_URL } from '@/lib/api';
 
 export default function AIInsights({ token }) {
     const [insights, setInsights] = useState([]);
     const [loading, setLoading] = useState(false);
-    const API_URL = import.meta.env.VITE_API_URL || "";
 
     const fetchInsights = async () => {
         setLoading(true);

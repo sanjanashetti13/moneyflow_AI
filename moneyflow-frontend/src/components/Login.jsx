@@ -3,6 +3,7 @@ import axios from 'axios'
 import { useNavigate, Link } from 'react-router-dom'
 import { TrendingUp, Mail, Lock, ArrowRight } from 'lucide-react'
 import EtheralShadow from './ui/EtheralShadow'
+import { API_URL } from '@/lib/api'
 
 export default function Login({ setToken }) {
   const [email, setEmail] = useState(import.meta.env.VITE_DEV_EMAIL || '')
@@ -10,7 +11,6 @@ export default function Login({ setToken }) {
   const [loading, setLoading] = useState(false)
 
   const navigate = useNavigate()
-  const API_URL = import.meta.env.VITE_API_URL
 
   const handleSubmit = async (e) => {
     e.preventDefault()

@@ -18,6 +18,7 @@ import {
 import { format } from "date-fns";
 import { useOutletContext } from "react-router-dom";
 import { TrendingUp, BarChart3, PieChart as PieChartIcon, Activity } from "lucide-react";
+import { API_URL } from "@/lib/api";
 
 const COLORS = ["#10b981", "#3b82f6", "#6366f1", "#f59e0b", "#71717a"];
 
@@ -26,7 +27,6 @@ export default function Analytics() {
   const [expenses, setExpenses] = useState([]);
   const [rates, setRates] = useState({});
   const baseCurrency = "INR";
-  const API_URL = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     if (!token) return;

@@ -5,6 +5,7 @@ import StarButton from '../ui/star-button';
 import { InteractiveRobotSpline } from '../ui/interactive-3d-robot';
 import { Card } from '../ui/card';
 import { AnimatedText } from '../ui/animated-text';
+import { API_URL } from '@/lib/api';
 
 export default function AIChatbot({ token }) {
     const [isOpen, setIsOpen] = useState(false);
@@ -14,7 +15,6 @@ export default function AIChatbot({ token }) {
     const [input, setInput] = useState("");
     const [loading, setLoading] = useState(false);
     const scrollRef = useRef(null);
-    const API_URL = import.meta.env.VITE_API_URL || "";
     const ROBOT_SCENE_URL = "https://prod.spline.design/PyzDhpQ9E5f1E3MT/scene.splinecode";
 
     useEffect(() => {
